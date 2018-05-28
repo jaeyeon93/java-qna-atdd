@@ -2,9 +2,14 @@ package codesquad.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.LogManager;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
+import codesquad.security.HttpSessionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import codesquad.UnAuthenticationException;
@@ -15,6 +20,8 @@ import codesquad.dto.UserDto;
 
 @Service("userService")
 public class UserService {
+    private static final Logger log =  LoggerFactory.getLogger(UserService.class);
+
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 
@@ -39,7 +46,10 @@ public class UserService {
     }
 
     public User login(String userId, String password) throws UnAuthenticationException {
-        // TODO 로그인 기능 구현
+        log.info("login method called by userservice");
+        Optional<User> user = userRepository.findByUserId(userId);
+        if (user.get().matchPassword(password))
+            return user.get();
         return null;
     }
 }
