@@ -46,10 +46,7 @@ public class UserService {
     }
 
     public User login(String userId, String password) throws UnAuthenticationException {
-        log.info("login method called by userservice");
         Optional<User> user = userRepository.findByUserId(userId);
-        if (user.get().matchPassword(password))
-            return user.get();
-        return null;
+        return user.filter(u -> u.matchPassword(password)).orElseThrow(UnAuthenticationException::new);
     }
 }
