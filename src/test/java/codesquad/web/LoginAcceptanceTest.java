@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.converter.HtmlFormDataBuilder;
 import org.junit.Test;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
@@ -13,6 +14,20 @@ import java.util.Arrays;
 public class LoginAcceptanceTest extends AcceptanceTest {
     @Test
     public void login() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        HtmlFormDataBuilder htmlFormDataBuilder = new HtmlFormDataBuilder(headers)
+                .addParams("userId", "javajigi")
+                .addParams("password", "test")
+                .addParams("name", "자바지기")
+                .addParams("email", "javajigi@slipp.net");
+
+        ResponseEntity<String> response = template().postForEntity("/users/login", htmlFormDataBuilder.build() , String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/users"));
+    }
+
+    @Test
+    public void before_refactoring_login() throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
