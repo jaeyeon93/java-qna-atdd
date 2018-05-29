@@ -39,17 +39,13 @@ public class QuestionAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void makeQuestion() throws Exception {
-        HttpHeaders headers = new HttpHeaders();
         User loginUser = defaultUser();
-        Question question = new Question("제목111", "내용111");
         HtmlFormDataBuilder htmlFormDataBuilder = HtmlFormDataBuilder.urlEncodedForm()
                 .addParams("title", "제목1111")
                 .addParams("contents", "내용1111");
         ResponseEntity<String> response = basicAuthTemplate(loginUser).postForEntity("/questions", htmlFormDataBuilder.build(), String.class);
-//        assertThat(response.getHeaders().getLocation().getPath(), is("/questions"));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/questions"));
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-//        assertNotNull(userRepository.findByUserId(userId));
-//        assertThat(response.getHeaders().getLocation().getPath(), is("/users"));
     }
 
     @Test
@@ -68,10 +64,25 @@ public class QuestionAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    public void updateQnA() throws Exception {
-        User writer = userRepository.findByUserId("javajigi").get();
-        Question question = questionRepository.getOne(writer.getId());
-        ResponseEntity<String> response = basicAuthTemplate(writer).getForEntity(String.format("/questions/%d/form", question.getId()), String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    public void updateQuestion() throws Exception {
+        User loginUser = defaultUser();
+        HtmlFormDataBuilder htmlFormDataBuilder = HtmlFormDataBuilder.urlEncodedForm()
+                .addParams("_method", "put")
+                .addParams("title", "제목수정성공")
+                .addParams("contents", "내용수정성공");
+        Question question = questionRepository.getOne(loginUser.getId());
+        ResponseEntity<String> response = basicAuthTemplate(loginUser).postForEntity(String.format("/questions/%d", question.getId()), htmlFormDataBuilder.build(), String.class);
+        assertThat(response.getStatusCode().value(), is(302));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/questions"));
+    }
+
+    @Test
+    public void deleteQuestion() throws Exception {
+        User loginUser = defaultUser();
+        int id = 1;
+        HtmlFormDataBuilder htmlFormDataBuilder = HtmlFormDataBuilder.urlEncodedForm()
+                .addParams("_method", "delete");
+        ResponseEntity<String> response = basicAuthTemplate(loginUser).postForEntity(String.format("/questions/%d", id), htmlFormDataBuilder.build(), String.class);
+        assertThat(response.getHeaders().getLocation().getPath(), is("/questions"));
     }
 }

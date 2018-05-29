@@ -86,8 +86,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
     }
 
     private ResponseEntity<String> update(TestRestTemplate template) throws Exception {
-        HttpHeaders headers = new HttpHeaders();
-        HtmlFormDataBuilder htmlFormDataBuilder = new HtmlFormDataBuilder(headers)
+        HtmlFormDataBuilder htmlFormDataBuilder = HtmlFormDataBuilder.urlEncodedForm()
                 .addParams("_method", "put")
                 .addParams("password", "test2")
                 .addParams("name", "자바지기2")

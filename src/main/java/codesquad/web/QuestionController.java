@@ -58,7 +58,15 @@ public class QuestionController {
 
     @PutMapping("/{id}")
     public String updateQnA(@LoginUser User loginUser, @PathVariable long id, Question target) {
+        log.info("put method called");
         qnaService.update(loginUser, id, target);
+        return "redirect:/questions";
+    }
+
+    @DeleteMapping("/{id}")
+    public String delteQnA(@LoginUser User loginUser, @PathVariable long id) {
+        log.info("delete method called");
+        qnaService.deleteQuestion(loginUser, id);
         return "redirect:/questions";
     }
 }
