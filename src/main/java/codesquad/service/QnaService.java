@@ -65,7 +65,10 @@ public class QnaService {
 
     @Transactional
     public void deleteQuestion(User loginUser, long questionId) throws CannotDeleteException {
-        return questionRepository.deleteById(;
+        Question question = questionRepository.findById(questionId).get();
+        if (!question.isOwner(loginUser))
+            throw new CannotDeleteException("자신이 쓴 글만 삭제할 수 있습니다.");
+        questionRepository.delete(question);
     }
 
     public Iterable<Question> findAll() {
