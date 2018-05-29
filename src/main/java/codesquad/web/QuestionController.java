@@ -11,10 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -33,6 +30,12 @@ public class QuestionController {
         return "/qna/form";
     }
 
+    @PostMapping("")
+    public String create(@LoginUser User loginUser, Question question) {
+        qnaService.create(loginUser, question);
+        return "redirect:/questions";
+    }
+
     @GetMapping("")
     public String list(Model model, Pageable pageable) {
         List<Question> questions = qnaService.findAll(pageable);
@@ -49,7 +52,7 @@ public class QuestionController {
 
     @GetMapping("/{id}/form")
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
-        model.addAttribute("question", qnaService.findById(id).get());
+        model.addAttribute("question", qnaService.findById(id));
         return "/qna/updateForm";
     }
 

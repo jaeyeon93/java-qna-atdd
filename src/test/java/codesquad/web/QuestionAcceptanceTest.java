@@ -4,6 +4,7 @@ import codesquad.converter.HtmlFormDataBuilder;
 import codesquad.domain.Question;
 import codesquad.domain.QuestionRepository;
 import codesquad.domain.User;
+import codesquad.domain.UserRepository;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +26,11 @@ public class QuestionAcceptanceTest extends AcceptanceTest {
     @Autowired
     QuestionRepository questionRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Test
-    public void createQnA() throws Exception {
+    public void create() throws Exception {
         ResponseEntity<String> response = template().getForEntity("/questions/form", String.class);
         log.info("status code : {}", response.getStatusCode());
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -34,16 +38,18 @@ public class QuestionAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    public void create() throws Exception {
+    public void makeQuestion() throws Exception {
         HttpHeaders headers = new HttpHeaders();
-        HtmlFormDataBuilder htmlFormDataBuilder = new HtmlFormDataBuilder(headers)
-                .addParams("title", "ㅈㅔ목")
-                .addParams("contents", "내용");
-
-        ResponseEntity<String> response = template().getForEntity("/questions", String.class);
+        User loginUser = defaultUser();
+        Question question = new Question("제목111", "내용111");
+        HtmlFormDataBuilder htmlFormDataBuilder = HtmlFormDataBuilder.urlEncodedForm()
+                .addParams("title", "제목1111")
+                .addParams("contents", "내용1111");
+        ResponseEntity<String> response = basicAuthTemplate(loginUser).postForEntity("/questions", htmlFormDataBuilder.build(), String.class);
+//        assertThat(response.getHeaders().getLocation().getPath(), is("/questions"));
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-//        assertNotNull(questionRepository.);
-        assertThat(response.getHeaders().getLocation().getPath(), is("/questions"));
+//        assertNotNull(userRepository.findByUserId(userId));
+//        assertThat(response.getHeaders().getLocation().getPath(), is("/users"));
     }
 
     @Test
@@ -61,11 +67,11 @@ public class QuestionAcceptanceTest extends AcceptanceTest {
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
-
-
     @Test
     public void updateQnA() throws Exception {
-        User writer = defaultUser();
-        ResponseEntity<String> response = basicAuthTemplate(writer).getForEntity(String.format("/questions/%d/for))
+        User writer = userRepository.findByUserId("javajigi").get();
+        Question question = questionRepository.getOne(writer.getId());
+        ResponseEntity<String> response = basicAuthTemplate(writer).getForEntity(String.format("/questions/%d/form", question.getId()), String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 }

@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 
+import codesquad.UnAuthenticationException;
+import codesquad.UnAuthorizedException;
+import codesquad.dto.QuestionDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
@@ -33,21 +36,25 @@ public class QnaService {
 
     public Question create(User loginUser, Question question) {
         question.writeBy(loginUser);
+        log.info("qnaservice create called, login user is {}", loginUser.toString());
         log.debug("question : {}", question);
         return questionRepository.save(question);
     }
 
-//    public Optional<Question> findById(long id) {
-//        return questionRepository.findById(id);
-//    }
     public Optional<Question> findById(long id) {
         return questionRepository.findById(id);
     }
 
+//    public Question findById(User loginUser, long id) {
+//        return questionRepository.findById(id)
+//                .filter(question -> question.isOwner(loginUser))
+//                .orElseThrow(UnAuthorizedException::new);
+//    }
+
     public Question update(User loginUser, long id, Question updatedQuestion) {
-        Optional<Question> original = findById(id);
-        original.get().update(loginUser,updatedQuestion);
-        return questionRepository.save(original.get());
+        Question original = findById(id).get();
+        original.update(loginUser,updatedQuestion);
+        return questionRepository.save(original);
     }
 
 //    public Question update(User loginUser, long id, Question updatedQuestion) {
