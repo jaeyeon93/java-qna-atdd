@@ -40,9 +40,8 @@ public class UserAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void create() throws Exception {
-        HttpHeaders headers = new HttpHeaders();
         String userId = "testuser5";
-        HtmlFormDataBuilder htmlFormDataBuilder = new HtmlFormDataBuilder(headers)
+        HtmlFormDataBuilder htmlFormDataBuilder = HtmlFormDataBuilder.urlEncodedForm()
                 .addParams("userId", userId)
                 .addParams("password", "password")
                 .addParams("name", "테스트")
