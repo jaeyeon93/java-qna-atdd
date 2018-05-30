@@ -17,11 +17,15 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.Where;
 
 import codesquad.dto.QuestionDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import support.domain.AbstractEntity;
 import support.domain.UrlGeneratable;
 
 @Entity
 public class Question extends AbstractEntity implements UrlGeneratable {
+    private static final Logger log =  LoggerFactory.getLogger(Question.class);
+
     @Size(min = 3, max = 100)
     @Column(length = 100, nullable = false)
     private String title;
@@ -60,6 +64,7 @@ public class Question extends AbstractEntity implements UrlGeneratable {
             throw new IllegalStateException("글쓴이만 수정할 수 있습니다.");
         this.title = target.title;
         this.contents = target.contents;
+        log.info("update success");
     }
 
     public String getTitle() {

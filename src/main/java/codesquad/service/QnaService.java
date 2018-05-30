@@ -45,23 +45,12 @@ public class QnaService {
         return questionRepository.findById(id);
     }
 
-//    public Question findById(User loginUser, long id) {
-//        return questionRepository.findById(id)
-//                .filter(question -> question.isOwner(loginUser))
-//                .orElseThrow(UnAuthorizedException::new);
-//    }
-
-    public Question update(User loginUser, long id, Question updatedQuestion) {
+    @Transactional
+    public void update(User loginUser, long id, Question updatedQuestion) {
         log.info("qnaservice update method called");
         Question original = findById(id).get();
         original.update(loginUser, updatedQuestion);
-        return questionRepository.save(original);
     }
-
-//    public Question update(User loginUser, long id, Question updatedQuestion) {
-//        // TODO 수정 기능 구현
-//        return null;
-//    }
 
     @Transactional
     public void deleteQuestion(User loginUser, long questionId) throws CannotDeleteException {
