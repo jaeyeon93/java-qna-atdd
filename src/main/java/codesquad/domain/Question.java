@@ -49,6 +49,12 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         this.contents = contents;
     }
 
+    public Question(String title, String contents, User writer) {
+        this.title = title;
+        this.contents = contents;
+        this.writer = writer;
+    }
+
     public void update(User writer, Question target) {
         if (!isOwner(writer))
             throw new IllegalStateException("글쓴이만 수정할 수 있습니다.");
