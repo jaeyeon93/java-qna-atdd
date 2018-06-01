@@ -40,7 +40,21 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    public void show() throws Exception {
-        ResponseEntity<String> response = basicAuthTemplate().getForEntity("/api/questions", String.class);
+    public void showQuestion() throws Exception {
+        ResponseEntity<String> response = template().getForEntity("/api/questions/1", String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void update() throws Exception {
+        question = new Question(3L,"제목11", "내용11", writer);
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/api/questions", question, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
+        String location = response.getHeaders().getLocation().getPath();
+
+        Question newQuestion = new Question(3L, "제목수정", "내용수정", writer);
+        basicAuthTemplate(writer).put(location, newQuestion);
+        Question dbQuestion = basicAuthTemplate(writer).getForObject(location, Question.class);
+        assertThat(dbQuestion, is(newQuestion));
     }
 }
