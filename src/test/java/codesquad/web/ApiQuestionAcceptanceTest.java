@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.converter.HtmlFormDataBuilder;
 import codesquad.domain.Question;
 import codesquad.domain.User;
 import codesquad.dto.QuestionDto;
@@ -40,6 +41,12 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    public void listTest() throws Exception {
+        ResponseEntity<String> response = template().getForEntity("/api/questions", String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
     public void showQuestion() throws Exception {
         ResponseEntity<String> response = template().getForEntity("/api/questions/1", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -56,5 +63,18 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
         basicAuthTemplate(writer).put(location, newQuestion);
         Question dbQuestion = basicAuthTemplate(writer).getForObject(location, Question.class);
         assertThat(dbQuestion, is(newQuestion));
+    }
+
+    @Test
+    public void delete() throws Exception {
+        question = new Question(3L,"제목112", "내용119", writer);
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/api/questions", question, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
+        String location = response.getHeaders().getLocation().getPath();
+        log.info("location is : {}", location);
+
+        basicAuthTemplate().delete(location);
+        response = template().getForEntity("/api/questions/3", String.class);
+        assertThat(response.getStatusCode().value(), is(500));
     }
 }
