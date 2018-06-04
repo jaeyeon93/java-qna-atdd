@@ -30,15 +30,13 @@ public class ApiAnswerController {
     @PostMapping("")
     public ResponseEntity<Void> create(@LoginUser User loginUser, @PathVariable long questionId, String contents) {
         Answer createAnswer = qnaService.addAnswer(loginUser, questionId, contents);
-        log.info("controller contents is {}", contents);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(String.format("/api/questions/%d/answer/", questionId) + createAnswer.getId()));
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("{id")
+    @DeleteMapping("{id}")
     public void delete(@LoginUser User loginUser, @PathVariable long id) throws CannotDeleteException {
-        log.f
         qnaService.deleteAnswer(loginUser, id);
     }
 }

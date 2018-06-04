@@ -48,16 +48,12 @@ public class ApiAnswerAcceptanceTest extends AcceptanceTest {
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
         String location = response.getHeaders().getLocation().getPath();
         Question dbQuestion = basicAuthTemplate(writer).getForObject(location, Question.class);
-
         Answer answer = new Answer(3L, writer, question,"답글12345");
-        log.info("answer is {}", answer);
         response = basicAuthTemplate().postForEntity(String.format("/api/questions/%d/answer", dbQuestion.getId()), answer, String.class);
         location = response.getHeaders().getLocation().getPath();
-        log.info("location is : {}", location);
-        basicAuthTemplate(writer).delete(location);
+        basicAuthTemplate().delete(location);
         // location is /api/questions/3/answer/3
-
-//        response = template().getForEntity("/api/questions/3/answer/3", String.class);
-//        assertThat(response.getStatusCode().value(), is(500));
+        response = template().getForEntity(location, String.class);
+        assertThat(response.getStatusCode().value(), is(500));
     }
 }

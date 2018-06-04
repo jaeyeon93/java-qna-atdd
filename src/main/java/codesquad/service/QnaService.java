@@ -82,7 +82,6 @@ public class QnaService {
         Answer answer = answerRepository.findById(id).get();
         if (!answer.isOwner(loginUser))
             throw new CannotDeleteException("자신이 쓴 댓글만 삭제할 수 있습니다.");
-        log.info("댓글 삭제");
         answerRepository.delete(answer);
     }
 }
