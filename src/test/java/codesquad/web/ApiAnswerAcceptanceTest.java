@@ -22,38 +22,30 @@ public class ApiAnswerAcceptanceTest extends AcceptanceTest {
 
     @Before
     public void setUp() {
-        writer = new User("javajigi", "password1", "jimmy", "jaeyeon93@naver.com");
+        writer = new User("jimmy", "12345", "jimmy", "jaeyeon93@naver.com");
         question = new Question(3L, "question title", "question content", writer);
-//        answer = new Answer(3L, writer, question,"답글12345");
     }
 
     @Test
     public void create() throws Exception {
-        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/api/questions", question , String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
-        String location = response.getHeaders().getLocation().getPath();
-        Question dbQuestion = basicAuthTemplate(writer).getForObject(location, Question.class);
+        question = new Question(3L,"제목112", "내용119", writer);
+        String path = createResource("/api/questions", question, writer);
+        log.info("path is : {}", path);
+        Question dbQuestion = basicAuthTemplate(writer).getForObject(path, Question.class);
         assertThat(dbQuestion, is(question));
 
-        Answer answer = new Answer(3L, writer, question,"답글12345");
-        response = basicAuthTemplate().postForEntity(String.format("/api/questions/%d/answer", dbQuestion.getId()), answer, String.class);
-        location = response.getHeaders().getLocation().getPath();
-        Answer answerdb = basicAuthTemplate(writer).getForObject(location,  Answer.class);
+        Answer answer = new Answer(4L, writer, question,"답글12345");
+        path = createResource(String.format("/api/questions/%d/answer", dbQuestion.getId()), answer,writer);
+        Answer answerdb = basicAuthTemplate(writer).getForObject(path,  Answer.class);
         assertThat(answerdb, is(answer));
     }
 
     @Test
     public void delete() throws Exception {
-        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/api/questions", question , String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
-        String location = response.getHeaders().getLocation().getPath();
-        Question dbQuestion = basicAuthTemplate(writer).getForObject(location, Question.class);
-        Answer answer = new Answer(3L, writer, question,"답글12345");
-        response = basicAuthTemplate().postForEntity(String.format("/api/questions/%d/answer", dbQuestion.getId()), answer, String.class);
-        location = response.getHeaders().getLocation().getPath();
-        basicAuthTemplate().delete(location);
-        // location is /api/questions/3/answer/3
-        response = template().getForEntity(location, String.class);
-        assertThat(response.getStatusCode().value(), is(500));
+        Answer answer = new Answer(4L, writer, question,"답글12345");
+        String path = createResource(String.format("/api/questions/%d/answer", 3), answer, writer);
+        log.info("path is {}", path);
+        // path is /api/questions/3/answer/4
+        basicAuthTemplate(writer).delete(path);
     }
 }
