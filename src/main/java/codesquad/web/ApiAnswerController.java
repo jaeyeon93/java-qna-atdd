@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/questions/{questionId}/answer")
+@RequestMapping("/api/questions/{questionId}/answers")
 public class ApiAnswerController {
     private static final Logger log =  LoggerFactory.getLogger(ApiAnswerController.class);
 
@@ -31,7 +31,7 @@ public class ApiAnswerController {
     public ResponseEntity<Void> create(@LoginUser User loginUser, @PathVariable long questionId, String contents) {
         Answer createAnswer = qnaService.addAnswer(loginUser, questionId, contents);
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(String.format("/api/questions/%d/answer/", questionId) + createAnswer.getId()));
+        headers.setLocation(URI.create(String.format("/api/questions/%d/answers/", questionId) + createAnswer.getId()));
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
 

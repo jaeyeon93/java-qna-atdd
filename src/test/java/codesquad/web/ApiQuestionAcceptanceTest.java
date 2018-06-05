@@ -36,8 +36,7 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
         question = new Question(3L,"제목112", "내용119", writer);
         String path = createResource("/api/questions", question, writer);
         log.info("path is : {}", path);
-        Question dbQuestion = basicAuthTemplate(writer).getForObject(path, Question.class);
-        assertThat(dbQuestion, is(question));
+        assertThat(getResource(path, Question.class, writer), is(question));
     }
 
     @Test
@@ -58,8 +57,7 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
         String path = createResource("/api/questions", question, writer);
         Question newQuestion = new Question(3L, "제목수정", "내용수정", writer);
         basicAuthTemplate(writer).put(path, newQuestion);
-        Question dbQuestion = getResource(path, Question.class, writer);
-        assertThat(dbQuestion, is(newQuestion));
+        assertThat(getResource(path, Question.class, writer), is(newQuestion));
     }
 
     @Test

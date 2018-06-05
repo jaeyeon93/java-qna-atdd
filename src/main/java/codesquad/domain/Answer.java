@@ -75,19 +75,7 @@ public class Answer extends AbstractEntity implements UrlGeneratable {
     public boolean isDeleted() {
         return deleted;
     }
-
-    public void setWriter(User writer) {
-        this.writer = writer;
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
-
+    
     @Override
     public String generateUrl() {
         return String.format("%s/answers/%d", question.generateUrl(), getId());

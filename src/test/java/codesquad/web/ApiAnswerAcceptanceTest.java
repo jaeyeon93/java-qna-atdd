@@ -31,19 +31,18 @@ public class ApiAnswerAcceptanceTest extends AcceptanceTest {
         question = new Question(3L,"제목112", "내용119", writer);
         String path = createResource("/api/questions", question, writer);
         log.info("path is : {}", path);
-        Question dbQuestion = basicAuthTemplate(writer).getForObject(path, Question.class);
-        assertThat(dbQuestion, is(question));
+        assertThat(getResource(path, Question.class, writer), is(question));
 
         Answer answer = new Answer(4L, writer, question,"답글12345");
-        path = createResource(String.format("/api/questions/%d/answer", dbQuestion.getId()), answer,writer);
-        Answer answerdb = basicAuthTemplate(writer).getForObject(path,  Answer.class);
-        assertThat(answerdb, is(answer));
+        log.info("answer is {}", answer.toString());
+        path = createResource(String.format("/api/questions/%d/answers", getResource(path, Question.class, writer).getId()), answer,writer);
+        assertThat(getResource(path, Answer.class, writer), is(answer));
     }
 
     @Test
     public void delete() throws Exception {
         Answer answer = new Answer(4L, writer, question,"답글12345");
-        String path = createResource(String.format("/api/questions/%d/answer", 3), answer, writer);
+        String path = createResource(String.format("/api/questions/%d/answers", 3), answer, writer);
         log.info("path is {}", path);
         // path is /api/questions/3/answer/4
         basicAuthTemplate(writer).delete(path);
