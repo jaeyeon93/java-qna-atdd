@@ -3,15 +3,7 @@ package codesquad.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 import codesquad.CannotDeleteException;
@@ -39,7 +31,11 @@ public class Question extends AbstractEntity implements UrlGeneratable {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
     private User writer;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+//    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+//    @Where(clause = "deleted = false")
+//    @OrderBy("id ASC")
+//    private List<Answer> answers = new ArrayList<>();
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Where(clause = "deleted = false")
     @OrderBy("id ASC")
     private List<Answer> answers = new ArrayList<>();
@@ -85,6 +81,10 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         return contents;
     }
 
+    public List<Answer> getAnswers() {
+        return answers;
+    }
+
     public User getWriter() {
         return writer;
     }
@@ -117,8 +117,16 @@ public class Question extends AbstractEntity implements UrlGeneratable {
     }
 
     public boolean delete(User loginUser) throws CannotDeleteException {
-        if (!isOwner(loginUser))
+        if (!isOwner(loginUser) || answerWriterCheck())
             throw new CannotDeleteException("자신이 쓴 글만 삭제할 수 있습니다.");
+        log.info("삭제성공");
         return true;
+    }
+
+    public boolean answerWriterCheck() {
+        for (Answer answer : answers)
+            if (!answer.isOwner(this.writer))
+                return true;
+        return false;
     }
 }

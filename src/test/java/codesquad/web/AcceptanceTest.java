@@ -25,12 +25,55 @@ public class AcceptanceTest extends support.test.AcceptanceTest {
     private AnswerRepository answerRepository;
 
     @Test
-    public void 삭제성공() throws Exception {
-        log.info("defaultUser : {}", defaultUser().toString());
-        Question question = questionRepository.findById(1L).get();
-        log.info("question : {}", question.getWriter().toString());
-        assertThat(question.delete(defaultUser()), is(true));
+    public void 답변없음로그인유저같음() throws Exception {
+        Question question = questionRepository.findById(4L).get();
+        log.info("question : {}, answer : {}", question.getWriter(), question.getAnswers());
+        question.delete(defaultUser());
     }
 
+    @Test
+    public void 답변없음로그인유저다름() throws Exception {
+        Question question = questionRepository.findById(4L).get();
+        log.info("question : {}, answer : {}", question.getWriter(), question.getAnswers());
+        User diffUser = findByUserId("jimmy");
+        log.info("user : {}", diffUser.toString());
+        question.delete(diffUser);
+    }
+
+    @Test
+    public void 답변있음글쓴이같음() throws Exception {
+        Question question = questionRepository.findById(5L).get();
+        log.info("question : {}, answer : {}", question.getWriter(), question.getAnswers());
+        question.delete(defaultUser());
+    }
+
+    @Test
+    public void 답변있음로그인유저다름() throws Exception {
+        Question question = questionRepository.findById(5L).get();
+        log.info("question : {}, answer : {}", question.getWriter(), question.getAnswers());
+        User diffUser = findByUserId("jimmy");
+        question.delete(diffUser);
+    }
+
+    @Test
+    public void 답변여러개로그인같음() throws Exception {
+        Question question = questionRepository.findById(6L).get();
+        log.info("question : {}, answer : {}", question.getWriter(), question.getAnswers());
+        question.delete(defaultUser());
+    }
+
+    @Test
+    public void 답변여러개로그인다름() throws Exception {
+        Question question = questionRepository.findById(6L).get();
+        log.info("question : {}, answer : {}", question.getWriter(), question.getAnswers());
+        User diffUser = findByUserId("jimmy");
+        question.delete(diffUser);
+    }
+
+    @Test
+    public void 댓글출력() throws Exception {
+        Question question = questionRepository.findById(6L).get();
+        System.out.println("Answer is " + question.getAnswers());
+    }
 
 }
