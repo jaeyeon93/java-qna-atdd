@@ -27,14 +27,6 @@ public class ApiQuestionController {
     @Resource(name = "qnaService")
     private QnaService qnaService;
 
-//    @PostMapping("")
-//    public ResponseEntity<Void> create(@LoginUser User loginUser, @Valid @RequestBody Question question) {
-//        Question createQuestion = qnaService.create(loginUser, question);
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setLocation(URI.create("/api/questions/" + createQuestion.getId()));
-//        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
-//    }
     @PostMapping("")
     public ResponseEntity<Void> create(@LoginUser User loginUser, @Valid @RequestBody QuestionDto questionDto) {
         Question createQuestion = qnaService.create(loginUser, questionDto);
@@ -54,11 +46,6 @@ public class ApiQuestionController {
         Optional<Question> question = qnaService.findById(id);
         return question.get();
     }
-
-//    @PutMapping("{id}")
-//    public void update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody Question updateQuestion) {
-//        qnaService.update(loginUser, id, updateQuestion);
-//    }
 
     @PutMapping("{id}")
     public void update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody QuestionDto updateQuestion) {

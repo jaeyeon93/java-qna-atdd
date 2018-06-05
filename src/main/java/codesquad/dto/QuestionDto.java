@@ -17,10 +17,6 @@ public class QuestionDto {
 
     public QuestionDto() {}
 
-//    public QuestionDto(String title, String contents) {
-//        this (title, contents);
-//    }
-
     public QuestionDto(long id, String title, String contents, User writer) {
         this.id = id;
         this.title = title;
@@ -35,12 +31,8 @@ public class QuestionDto {
         this.writer = writer;
     }
 
-    public Question toQuestion2() {
-        return new Question(this.id, this.title, this.contents, this.writer);
-    }
-
     public Question toQuestion() {
-        return new Question(this.title, this.contents, this.writer);
+        return new Question(this.id, this.title, this.contents, this.writer);
     }
 
     public long getId() {
