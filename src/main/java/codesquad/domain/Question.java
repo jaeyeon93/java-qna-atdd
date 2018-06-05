@@ -53,6 +53,10 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         this.contents = contents;
     }
 
+    public Question(String title, String contents, User writer) {
+        this(0L,title, contents, writer);
+    }
+
     public Question(long id, String title, String contents, User writer) {
         super(id);
         this.title = title;
@@ -66,6 +70,10 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         this.title = target.title;
         this.contents = target.contents;
         log.info("update success");
+    }
+
+    public QuestionDto toQuestionDto() {
+        return new QuestionDto(this.title, this.contents, this.writer);
     }
 
     public String getTitle() {
@@ -102,20 +110,16 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         return String.format("/questions/%d", getId());
     }
 
-    public QuestionDto toQuestionDto() {
-        return new QuestionDto(getId(), this.title, this.contents);
-    }
-
     @Override
     public String toString() {
         return "Question [id=" + getId() + ", title=" + title + ", contents=" + contents + ", writer=" + writer + "]";
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+//    public void setTitle(String title) {
+//        this.title = title;
+//    }
 
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
+//    public void setContents(String contents) {
+//        this.contents = contents;
+//    }
 }
