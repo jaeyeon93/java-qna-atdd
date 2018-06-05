@@ -60,7 +60,6 @@ public class QnaService {
         questionRepository.delete(question);
     }
 
-
     public Iterable<Question> findAll() {
         return questionRepository.findByDeleted(false);
     }

@@ -31,10 +31,6 @@ public class Question extends AbstractEntity implements UrlGeneratable {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
     private User writer;
 
-//    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
-//    @Where(clause = "deleted = false")
-//    @OrderBy("id ASC")
-//    private List<Answer> answers = new ArrayList<>();
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Where(clause = "deleted = false")
     @OrderBy("id ASC")
@@ -103,6 +99,7 @@ public class Question extends AbstractEntity implements UrlGeneratable {
     }
 
     public boolean isDeleted() {
+        log.info("isDeleted 호출");
         return deleted;
     }
 
@@ -122,6 +119,13 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         log.info("삭제성공");
         return true;
     }
+
+//    public void delete(User loginUser) throws CannotDeleteException {
+//        if (!isOwner(loginUser) || answerWriterCheck())
+//            throw new CannotDeleteException("자신이 쓴 글만 삭제할 수 있습니다.");
+//        log.info("삭제성공");
+//        isDeleted();
+//    }
 
     public boolean answerWriterCheck() {
         for (Answer answer : answers)

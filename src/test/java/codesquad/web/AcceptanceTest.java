@@ -31,7 +31,7 @@ public class AcceptanceTest extends support.test.AcceptanceTest {
         question.delete(defaultUser());
     }
 
-    @Test
+    @Test(expected = CannotDeleteException.class)
     public void 답변없음로그인유저다름() throws Exception {
         Question question = questionRepository.findById(4L).get();
         log.info("question : {}, answer : {}", question.getWriter(), question.getAnswers());
@@ -47,7 +47,7 @@ public class AcceptanceTest extends support.test.AcceptanceTest {
         question.delete(defaultUser());
     }
 
-    @Test
+    @Test(expected = CannotDeleteException.class)
     public void 답변있음로그인유저다름() throws Exception {
         Question question = questionRepository.findById(5L).get();
         log.info("question : {}, answer : {}", question.getWriter(), question.getAnswers());
@@ -55,25 +55,18 @@ public class AcceptanceTest extends support.test.AcceptanceTest {
         question.delete(diffUser);
     }
 
-    @Test
+    @Test(expected = CannotDeleteException.class)
     public void 답변여러개로그인같음() throws Exception {
         Question question = questionRepository.findById(6L).get();
         log.info("question : {}, answer : {}", question.getWriter(), question.getAnswers());
         question.delete(defaultUser());
     }
 
-    @Test
+    @Test(expected = CannotDeleteException.class)
     public void 답변여러개로그인다름() throws Exception {
         Question question = questionRepository.findById(6L).get();
         log.info("question : {}, answer : {}", question.getWriter(), question.getAnswers());
         User diffUser = findByUserId("jimmy");
         question.delete(diffUser);
     }
-
-    @Test
-    public void 댓글출력() throws Exception {
-        Question question = questionRepository.findById(6L).get();
-        System.out.println("Answer is " + question.getAnswers());
-    }
-
 }
