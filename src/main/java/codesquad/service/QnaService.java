@@ -57,7 +57,7 @@ public class QnaService {
         Question question = questionRepository.findById(questionId).get();
         if (!question.isOwner(loginUser))
             throw new CannotDeleteException("자신이 쓴 글만 삭제할 수 있습니다.");
-        questionRepository.delete(question);
+        deleteHistoryService.saveAll(question.delete(loginUser));
     }
 
     public Iterable<Question> findAll() {
@@ -82,6 +82,6 @@ public class QnaService {
         Answer answer = answerRepository.findById(id).get();
         if (!answer.isOwner(loginUser))
             throw new CannotDeleteException("자신이 쓴 댓글만 삭제할 수 있습니다.");
-        answerRepository.delete(answer);
+        deleteHistoryService.save(answer.delete(loginUser));
     }
 }

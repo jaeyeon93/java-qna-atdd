@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,30 +114,22 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         return "Question [id=" + getId() + ", title=" + title + ", contents=" + contents + ", writer=" + writer + "]";
     }
 
-//    public List<DeleteHistory> delete2(User loginUser) throws CannotDeleteException {
-//        if (!isOwner(loginUser) || answerWriterCheck())
-//            throw new CannotDeleteException("자신이 쓴 글만 삭제할 수 있습니다.");
-//        log.info("삭제성공");
-//        deleted = true;
-//        List<DeleteHistory> histories = new ArrayList<>();
-//        histories.add(new DeleteHistory());
-//        DeleteHistory deleteHistory = new DeleteHistory(this , getId(), loginUser, getFormattedCreateDate());
-//        return histories;
-//    }
-
-    public boolean delete(User loginUser) throws CannotDeleteException {
+    public List<DeleteHistory> delete(User loginUser) throws CannotDeleteException {
         if (!isOwner(loginUser) || answerWriterCheck())
             throw new CannotDeleteException("자신이 쓴 글만 삭제할 수 있습니다.");
         log.info("삭제성공");
-        return true;
+        deleted = true;
+        List<DeleteHistory> histories = new ArrayList<>();
+        histories.add(new DeleteHistory(ContentType.QUESTION ,getId(), loginUser, LocalDateTime.now()));
+        return histories;
     }
 
-//    public void delete(User loginUser) throws CannotDeleteException {
-//        if (!isOwner(loginUser) || answerWriterCheck())
-//            throw new CannotDeleteException("자신이 쓴 글만 삭제할 수 있습니다.");
-//        log.info("삭제성공");
-//        isDeleted();
-//    }
+    public List<DeleteHistory> deleteAnswer(User loginUser) throws CannotDeleteException {
+        List<DeleteHistory> histories = new ArrayList<>();
+        for (Answer answer : getAnswers())
+            histories.add(answer.delete(loginUser));
+        return histories;
+    }
 
     public boolean answerWriterCheck() {
         for (Answer answer : answers)
@@ -144,4 +137,11 @@ public class Question extends AbstractEntity implements UrlGeneratable {
                 return true;
         return false;
     }
+
+//    public boolean delete(User loginUser) throws CannotDeleteException {
+//        if (!isOwner(loginUser) || answerWriterCheck())
+//            throw new CannotDeleteException("자신이 쓴 글만 삭제할 수 있습니다.");
+//        log.info("삭제성공");
+//        return true;
+//    }
 }
