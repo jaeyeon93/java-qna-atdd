@@ -58,7 +58,7 @@ public class Answer extends AbstractEntity implements UrlGeneratable {
 
     public DeleteHistory delete(User loginUser) throws CannotDeleteException {
         if (getQuestion().isDeleted() == false)
-            throw new CannotDeleteException("삭제할 수 없습니다.");
+            throw new CannotDeleteException("댓글을 삭제할 수 없습니다.");
         return new DeleteHistory(ContentType.ANSWER, getId(), loginUser, LocalDateTime.now());
     }
 

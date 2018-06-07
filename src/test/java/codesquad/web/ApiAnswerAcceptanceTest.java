@@ -3,6 +3,7 @@ package codesquad.web;
 import codesquad.domain.Answer;
 import codesquad.domain.Question;
 import codesquad.domain.User;
+import codesquad.dto.QuestionDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -23,20 +24,21 @@ public class ApiAnswerAcceptanceTest extends AcceptanceTest {
     @Before
     public void setUp() {
         writer = new User("jimmy", "12345", "jimmy", "jaeyeon93@naver.com");
-        question = new Question(3L, "question title", "question content", writer);
+        question = new Question(8L, "question title", "question content", writer);
+        log.info("setUp 실행");
     }
 
     @Test
     public void create() throws Exception {
-        question = new Question(3L,"제목112", "내용119", writer);
-        String path = createResource("/api/questions", question, writer);
+        question = new QuestionDto(7L,"제목112", "내용119", defaultUser()).toQuestion();
+        String path = createResource("/api/questions", question, defaultUser());
         log.info("path is : {}", path);
-        assertThat(getResource(path, Question.class, writer), is(question));
-
-        Answer answer = new Answer(4L, writer, question,"답글12345");
+        assertThat(getResource(path, Question.class, defaultUser()), is(question));
+        log.info("question is : {}", question.toString());
+        Answer answer = new Answer(7L, defaultUser(), question,"답글12345");
         log.info("answer is {}", answer.toString());
-        path = createResource(String.format("/api/questions/%d/answers", getResource(path, Question.class, writer).getId()), answer,writer);
-        assertThat(getResource(path, Answer.class, writer), is(answer));
+        path = createResource(String.format("/api/questions/%d/answers", getResource(path, Question.class, defaultUser()).getId()), answer,defaultUser());
+        assertThat(getResource(path, Answer.class, defaultUser()), is(answer));
     }
 
     @Test

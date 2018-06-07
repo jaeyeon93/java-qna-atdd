@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 import codesquad.CannotDeleteException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Where;
 
 import codesquad.dto.QuestionDto;
@@ -35,6 +36,7 @@ public class Question extends AbstractEntity implements UrlGeneratable {
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Where(clause = "deleted = false")
     @OrderBy("id ASC")
+    @JsonIgnore
     private List<Answer> answers = new ArrayList<>();
 
     private boolean deleted = false;
@@ -137,11 +139,4 @@ public class Question extends AbstractEntity implements UrlGeneratable {
                 return true;
         return false;
     }
-
-//    public boolean delete(User loginUser) throws CannotDeleteException {
-//        if (!isOwner(loginUser) || answerWriterCheck())
-//            throw new CannotDeleteException("자신이 쓴 글만 삭제할 수 있습니다.");
-//        log.info("삭제성공");
-//        return true;
-//    }
 }
