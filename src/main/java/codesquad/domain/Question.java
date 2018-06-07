@@ -123,6 +123,7 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         deleted = true;
         List<DeleteHistory> histories = new ArrayList<>();
         histories.add(new DeleteHistory(ContentType.QUESTION ,getId(), loginUser, LocalDateTime.now()));
+        histories.add(new DeleteHistory(ContentType.ANSWER, getId(), loginUser, LocalDateTime.now()));
         return histories;
     }
 
