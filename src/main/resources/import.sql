@@ -17,3 +17,4 @@ INSERT INTO answer (writer_id, contents, create_date, question_id, deleted) VALU
 INSERT INTO answer (writer_id, contents, create_date, question_id, deleted) VALUES (1, 'default유저가 쓴 댓글', CURRENT_TIMESTAMP(), 6, false);
 INSERT INTO answer (writer_id, contents, create_date, question_id, deleted) VALUES (3, 'jimmy가 쓴 댓글', CURRENT_TIMESTAMP(), 6, false);
 
+
