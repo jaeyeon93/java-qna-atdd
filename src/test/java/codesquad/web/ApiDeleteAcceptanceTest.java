@@ -16,13 +16,13 @@ public class ApiDeleteAcceptanceTest extends AcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(ApiDeleteAcceptanceTest.class);
     private Question question;
     private User JIMMY;
-    private Answer answer;
+//    private Answer answer;
 
-    @Autowired
-    private QuestionRepository questionRepository;
-
-    @Autowired
-    private AnswerRepository answerRepository;
+//    @Autowired
+//    private QuestionRepository questionRepository;
+//
+//    @Autowired
+//    private AnswerRepository answerRepository;
 
     @Before
     public void setUp() {
