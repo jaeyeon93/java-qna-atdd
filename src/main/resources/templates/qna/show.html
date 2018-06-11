@@ -104,9 +104,9 @@
                                   </ul>
                               </div>
                           </article>
-                          <form class="submit-write" action="/api/questions/{{id}}/answers">
+                          <form class="submit-write" name="contents" action="/api/questions/{{id}}/answers">
                               <div class="form-group" style="padding:14px;">
-                                  <textarea class="form-control" placeholder="Update your status"></textarea>
+                                  <textarea name="contents" class="form-control" placeholder="Update your status"></textarea>
                               </div>
                               <button class="btn btn-success pull-right" type="button">답변하기</button>
                               <div class="clearfix" />

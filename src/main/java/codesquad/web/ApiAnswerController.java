@@ -29,7 +29,9 @@ public class ApiAnswerController {
 
     @PostMapping("")
     public ResponseEntity<Void> create(@LoginUser User loginUser, @PathVariable long questionId, String contents) {
+        log.info("contents : {}", contents);
         Answer createAnswer = qnaService.addAnswer(loginUser, questionId, contents);
+        log.info("createAnswer : {}", createAnswer.toString());
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(String.format("/api/questions/%d/answers/", questionId) + createAnswer.getId()));
         log.info("댓글 생성");

@@ -121,16 +121,19 @@ public class Question extends AbstractEntity implements UrlGeneratable {
             throw new CannotDeleteException("자신이 쓴 글만 삭제할 수 있습니다.");
         log.info("삭제성공");
         deleted = true;
-        List<DeleteHistory> histories = new ArrayList<>();
+        List<DeleteHistory> histories = deleteAnswer(loginUser);
+//        List<DeleteHistory> histories = new ArrayList<>();
         histories.add(new DeleteHistory(ContentType.QUESTION ,getId(), loginUser, LocalDateTime.now()));
-        deleteAnswer(loginUser);
         return histories;
     }
 
     public List<DeleteHistory> deleteAnswer(User loginUser) throws CannotDeleteException {
         List<DeleteHistory> histories = new ArrayList<>();
-        for (Answer answer : getAnswers())
+        log.info("getAnswers : {}", getAnswers());
+        for (Answer answer : getAnswers()) {
+            log.info("for문호출");
             histories.add(answer.delete(loginUser));
+        }
         return histories;
     }
 
