@@ -45,7 +45,7 @@ public class ApiDeleteAcceptanceTest extends AcceptanceTest {
         String path = createResource("/api/questions", question, defaultUser());
         assertThat(getResource(path, Question.class, defaultUser()), is(question));
         //댓글추가
-        Answer answer = new Answer(7L, defaultUser(), question, "답글12345");
+        Answer answer = new Answer(8L, defaultUser(), question, "답글12345");
         String path2 = createResource(String.format("/api/questions/%d/answers", getResource(path, Question.class, defaultUser()).getId()), answer, defaultUser());
         assertThat(getResource(path2, Answer.class, defaultUser()), is(answer));
         //삭제시도
@@ -68,11 +68,18 @@ public class ApiDeleteAcceptanceTest extends AcceptanceTest {
         String path = createResource("/api/questions", question, defaultUser());
         assertThat(getResource(path, Question.class, defaultUser()), is(question));
         //댓글추가
-        Answer answer = new Answer(7L, defaultUser(), question, "답글12345");
+        Answer answer = new Answer(8L, defaultUser(), question, "답글12345");
         path = createResource(String.format("/api/questions/%d/answers", getResource(path, Question.class, defaultUser()).getId()), answer, defaultUser());
         assertThat(getResource(path, Answer.class, defaultUser()), is(answer));
         //삭제시도
         basicAuthTemplate(JIMMY).delete(path);
         assertFalse(getResource(path, Question.class, defaultUser()).isDeleted());
+    }
+
+    @Test
+    public void 댓글여러개() throws Exception {
+        question = questionRepository.findById(5L).get();
+        log.info("answer information : {}", question.getAnswers());
+        question.delete(defaultUser());
     }
 }

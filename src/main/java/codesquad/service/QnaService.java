@@ -55,6 +55,7 @@ public class QnaService {
     @Transactional
     public void deleteQuestion(User loginUser, long questionId) throws CannotDeleteException {
         Question question = questionRepository.findById(questionId).get();
+        log.info("qnaservice delete method called");
         if (!question.isOwner(loginUser))
             throw new CannotDeleteException("자신이 쓴 글만 삭제할 수 있습니다.");
         deleteHistoryService.saveAll(question.delete(loginUser));

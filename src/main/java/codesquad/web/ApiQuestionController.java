@@ -55,6 +55,7 @@ public class ApiQuestionController {
     @DeleteMapping("{id}")
     public void delete(@LoginUser User loginUser, @PathVariable long id) throws CannotDeleteException {
         try {
+            log.info("deleteQuestion 호출");
             qnaService.deleteQuestion(loginUser, id);
         } catch (CannotDeleteException e) {
             e.getMessage();
