@@ -74,7 +74,7 @@ public class UserController {
         User user = userService.login(userId, password);
         if (user != null) {
             session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
-            return "redirect:/users";
+            return "redirect:/";
         }
         return "/user/login_fail";
     }

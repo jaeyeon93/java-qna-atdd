@@ -69,10 +69,6 @@ public class ApiDeleteAcceptanceTest extends AcceptanceTest {
         Answer answer2 = new Answer(8L, defaultUser(), question, "새로운댓글");
         createResource(String.format("/api/questions/%d/answers", getResource(path, Question.class, defaultUser()).getId()), answer2, defaultUser());
         //삭제시도
-        question = questionRepository.findById(3L).get();
-        log.info("question : {}", question.toString());
-        answer2 = answerRepository.findById(8L).get();
-        log.info("answer : {}", answer2.toString());
         basicAuthTemplate().delete(path);
         assertTrue(getResource(path, Question.class, defaultUser()).isDeleted());
         log.info("delete history : {}", deleteHistoryRepository.findAll());
