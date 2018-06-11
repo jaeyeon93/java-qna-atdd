@@ -24,6 +24,9 @@ public class ApiDeleteAcceptanceTest extends AcceptanceTest {
     @Autowired
     private AnswerRepository answerRepository;
 
+    @Autowired
+    private DeleteHistoryRepository deleteHistoryRepository;
+
     @Before
     public void setUp() {
         JIMMY = new User("jimmy", "12345", "jimmy", "jaeyeon93@naver.com");
@@ -51,6 +54,24 @@ public class ApiDeleteAcceptanceTest extends AcceptanceTest {
         //삭제시도
         basicAuthTemplate().delete(path);
         assertTrue(getResource(path, Question.class, defaultUser()).isDeleted());
+    }
+
+    @Test
+    public void 삭제가능3() throws Exception {
+        // 질문추가
+        question = new Question(3L, "제목112", "내용119", defaultUser());
+        String path = createResource("/api/questions", question, defaultUser());
+        assertThat(getResource(path, Question.class, defaultUser()), is(question));
+        //댓글추가
+        Answer answer = new Answer(7L, defaultUser(), question, "답글12345");
+        String path2 = createResource(String.format("/api/questions/%d/answers", getResource(path, Question.class, defaultUser()).getId()), answer, defaultUser());
+        assertThat(getResource(path2, Answer.class, defaultUser()), is(answer));
+        Answer answer2 = new Answer(8L, defaultUser(), question, "새로운댓글");
+        createResource(String.format("/api/questions/%d/answers", getResource(path, Question.class, defaultUser()).getId()), answer2, defaultUser());
+        //삭제시도
+        basicAuthTemplate().delete(path);
+        assertTrue(getResource(path, Question.class, defaultUser()).isDeleted());
+        log.info("delete history : {}", deleteHistoryRepository.findAll());
     }
 
     @Test
